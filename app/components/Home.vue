@@ -1,5 +1,5 @@
 <template>
-  <Page @loaded="loaded">
+  <Page>
     <ActionBar>
       <Label text="Home" />
     </ActionBar>
@@ -18,34 +18,10 @@
 <script lang="ts">
 import Vue from "nativescript-vue";
 import { Component } from "vue-property-decorator";
-import { login, onAuthStateChange } from "@/utils/firebase";
-import Home from "./Home.vue";
-import { firebase } from "@nativescript/firebase";
 
 @Component
-export default class Main extends Vue {
-  private message: string = "Logging in...";
-
-  async loaded() {
-    const user = await firebase.getCurrentUser();
-    if (user) {
-      this.navToHome();
-      return;
-    }
-
-    onAuthStateChange((data) => {
-      if (data.loggedIn) {
-        this.navToHome();
-        return;
-      }
-    });
-
-    await login();
-  }
-
-  private navToHome() {
-    this.$navigateTo(Home);
-  }
+export default class Home extends Vue {
+  private message: string = "Home";
 }
 </script>
 

@@ -1,7 +1,7 @@
 import Vue from "vue";
 import Vuex from "vuex";
 import { createProxy, extractVuexModule } from "vuex-class-component";
-import { DemoStore } from "./Demo";
+import { DemoStore } from "./demo";
 
 Vue.use(Vuex);
 

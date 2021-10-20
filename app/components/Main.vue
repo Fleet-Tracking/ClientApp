@@ -5,10 +5,10 @@
     </ActionBar>
 
     <GridLayout>
-      <Label class="info">
+      <Label class="info" @tap="gotoTest">
         <FormattedString>
-          <Span class="fas" text.decode="&#xf135; " />
-          <Span :text="message" />
+          <Label class="fas" text.decode="&#xf135; " />
+          <Label :text="message" @tap="gotoTest" />
         </FormattedString>
       </Label>
     </GridLayout>
@@ -18,21 +18,18 @@
 <script lang="ts">
 import Vue from "nativescript-vue";
 import { Component } from "vue-property-decorator";
+import { initialize } from "@/utils/firebase";
 import { firebase } from "@nativescript/firebase";
-
 @Component
 export default class Home extends Vue {
   private message: string = "Hello";
+  private initialized: boolean = false;
 
   created() {
-    firebase.init().then(
-      () => {
-        console.log("firebase.init done");
-      },
-      (error) => {
-        console.log(`firebase.init error: ${error}`);
-      }
-    );
+    initialize().then((url) => {
+      console.info(url);
+      this.initialized = true;
+    });
   }
 }
 </script>
@@ -47,6 +44,7 @@ export default class Home extends Vue {
 
 .info {
   font-size: 20;
+  horizontal-align: center;
   vertical-align: center;
 }
 </style>

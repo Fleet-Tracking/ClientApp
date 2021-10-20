@@ -25,19 +25,14 @@ export default class Home extends Vue {
   private message: string = "Hello";
 
   created() {
-    firebase
-      .init({
-        // Optionally pass in properties for database, authentication and cloud messaging,
-        // see their respective docs.
-      })
-      .then(
-        () => {
-          console.log("firebase.init done");
-        },
-        (error) => {
-          console.log(`firebase.init error: ${error}`);
-        }
-      );
+    firebase.init().then(
+      () => {
+        console.log("firebase.init done");
+      },
+      (error) => {
+        console.log(`firebase.init error: ${error}`);
+      }
+    );
   }
 }
 </script>
@@ -52,7 +47,6 @@ export default class Home extends Vue {
 
 .info {
   font-size: 20;
-  horizontal-align: center;
   vertical-align: center;
 }
 </style>

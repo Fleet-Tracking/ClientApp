@@ -1,5 +1,5 @@
 import Vue from 'nativescript-vue'
-import Home from './components/Home.vue'
+import Home from './components/Main.vue'
 
 declare let __DEV__: boolean;
 

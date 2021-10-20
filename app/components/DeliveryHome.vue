@@ -18,10 +18,16 @@
 <script lang="ts">
 import Vue from "nativescript-vue";
 import { Component } from "vue-property-decorator";
+import { vxm } from "~/store";
+import { setInitialUserData } from "~/utils/firebase";
 
 @Component
-export default class Home extends Vue {
+export default class DeliveryHome extends Vue {
   private message: string = "Home";
+
+  async mounted() {
+    await setInitialUserData();
+  }
 }
 </script>
 

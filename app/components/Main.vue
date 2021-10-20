@@ -19,7 +19,7 @@
 import Vue from "nativescript-vue";
 import { Component } from "vue-property-decorator";
 import { login, onAuthStateChange } from "@/utils/firebase";
-import Home from "./Home.vue";
+import DeliveryHome from "./DeliveryHome.vue";
 import { firebase } from "@nativescript/firebase";
 
 @Component
@@ -44,7 +44,7 @@ export default class Main extends Vue {
   }
 
   private navToHome() {
-    this.$navigateTo(Home);
+    this.$navigateTo(DeliveryHome);
   }
 }
 </script>

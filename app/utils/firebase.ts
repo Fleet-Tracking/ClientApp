@@ -10,7 +10,6 @@ export async function initialize() {
 }
 
 export async function login() {
-  console.log('here')
   if (initialized) {
     return firebase
       .login({
@@ -26,4 +25,14 @@ export function onAuthStateChange(onAuthStateChanged: ((data: firebase.AuthState
   firebase.addAuthStateListener({
     onAuthStateChanged
   })
+}
+
+export async function setInitialUserData() {
+  const user = await firebase.getCurrentUser()
+  if (user && user.phoneNumber) {
+    firebase.setValue('/users/' + user.uid, {
+      phone: user.phoneNumber,
+      role: 'DELIVERY'
+    })
+  }
 }

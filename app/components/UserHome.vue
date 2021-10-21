@@ -6,12 +6,7 @@
 
     <ScrollView orientation="vertical">
       <StackLayout>
-        <Button
-          v-for="del in deliveries"
-          :text="del.lat + ' - ' + del.lng"
-          :key="del.id"
-          @tap="openDeliveryView(del)"
-        />
+        <Button />
       </StackLayout>
     </ScrollView>
   </Page>
@@ -26,30 +21,9 @@ import { vxm } from "~/store";
 import MapView from "./MapView.vue";
 
 @Component
-export default class DeliveryHome extends Vue {
-  private get deliveries() {
-    return vxm.firebase.deliveries;
-  }
-
+export default class UserHome extends Vue {
   async mounted() {
-    await vxm.firebase.setInitialUserData("DELIVERY");
-    await vxm.firebase.watchDeliveries();
-  }
-
-  private loaded() {
-    android.on("activityBackPressed", this.customBack);
-  }
-
-  private leaving() {
-    android.off("activityBackPressed", this.customBack);
-  }
-
-  private openDeliveryView(item: DeliveryItem) {
-    this.$navigateTo(MapView, {
-      props: {
-        delivery: item,
-      },
-    });
+    await vxm.firebase.setInitialUserData("USER");
   }
 
   private customBack(data: AndroidActivityBackPressedEventData) {

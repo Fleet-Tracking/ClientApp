@@ -60,11 +60,11 @@ export class FirebaseStore extends VuexModule.With({ namespaced: 'demo' }) {
   }
 
   @action
-  async setInitialUserData() {
+  async setInitialUserData(type: 'DELIVERY' | 'USER') {
     if (this.user && this.user.phone) {
       firebase.setValue('/users/' + this.user.uid, {
         phone: this.user.phone,
-        role: 'DELIVERY'
+        role: type
       })
     }
   }

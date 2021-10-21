@@ -1,17 +1,13 @@
 <template>
-  <Page @loaded="loaded">
+  <Page>
     <ActionBar>
       <Label text="Home" />
     </ActionBar>
 
-    <GridLayout>
-      <Label class="info">
-        <FormattedString>
-          <Label class="fas" text.decode="&#xf135; " />
-          <Label :text="message" />
-        </FormattedString>
-      </Label>
-    </GridLayout>
+    <StackLayout>
+      <Button text="Delivery" @tap="setUserType('DELIVERY')" />
+      <Button text="User" @tap="setUserType('USER')" />
+    </StackLayout>
   </Page>
 </template>
 
@@ -20,12 +16,13 @@ import Vue from "nativescript-vue";
 import { Component } from "vue-property-decorator";
 import DeliveryHome from "./DeliveryHome.vue";
 import { vxm } from "~/store";
+import UserHome from "./UserHome.vue";
 
 @Component
 export default class Main extends Vue {
-  private message: string = "Logging in...";
+  private userType: "DELIVERY" | "USER" = "USER";
 
-  async loaded() {
+  async login() {
     const user = await vxm.firebase.initialize();
     if (!user) {
       vxm.firebase.login();
@@ -46,8 +43,14 @@ export default class Main extends Vue {
     );
   }
 
+  private setUserType(type: "DELIVERY" | "USER") {
+    this.userType = type;
+    this.login();
+  }
+
   private navToHome() {
-    this.$navigateTo(DeliveryHome);
+    if (this.userType === "DELIVERY") this.$navigateTo(DeliveryHome);
+    else this.$navigateTo(UserHome);
   }
 }
 </script>

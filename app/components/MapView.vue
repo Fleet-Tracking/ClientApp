@@ -13,6 +13,7 @@
 <script lang="ts">
 import Vue from "nativescript-vue";
 import { Component, Prop } from "vue-property-decorator";
+import * as geolocation from "@nativescript/geolocation";
 
 @Component
 export default class MapView extends Vue {
@@ -21,6 +22,32 @@ export default class MapView extends Vue {
 
   async mounted() {
     console.log(this.delivery);
+    this.updateCoordinates();
+  }
+
+  // TODO: Unset this on component destroy
+  private async updateCoordinates() {
+    try {
+      await geolocation.enableLocationRequest();
+    } catch (e) {
+      console.log(e);
+    }
+
+    if (await geolocation.isEnabled()) {
+      geolocation.watchLocation(
+        (location) => {
+          console.log(location);
+        },
+        (err) => {
+          console.error(err);
+        },
+        { desiredAccuracy: 1 /* High Accuracy */ }
+      );
+    }
+
+    // setTimeout(() => {
+
+    // }, 15000)
   }
 }
 </script>

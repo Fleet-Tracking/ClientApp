@@ -1,1 +1,1 @@
-export const PHONE_NUMBER = '+919819230849'
+export const PHONE_NUMBER = '+911234567890'

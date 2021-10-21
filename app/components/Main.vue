@@ -18,29 +18,32 @@
 <script lang="ts">
 import Vue from "nativescript-vue";
 import { Component } from "vue-property-decorator";
-import { login, onAuthStateChange } from "@/utils/firebase";
 import DeliveryHome from "./DeliveryHome.vue";
-import { firebase } from "@nativescript/firebase";
+import { vxm } from "~/store";
 
 @Component
 export default class Main extends Vue {
   private message: string = "Logging in...";
 
   async loaded() {
-    const user = await firebase.getCurrentUser();
-    if (user) {
+    const user = await vxm.firebase.initialize();
+    if (!user) {
+      vxm.firebase.login();
+    } else {
+      vxm.firebase.setUser({ uid: user.uid, phone: user.phoneNumber! });
+      console.log(vxm.firebase.user);
       this.navToHome();
-      return;
     }
 
-    onAuthStateChange((data) => {
-      if (data.loggedIn) {
-        this.navToHome();
-        return;
-      }
-    });
-
-    await login();
+    vxm.firebase.$watch(
+      "user",
+      (user) => {
+        if (user) {
+          this.navToHome();
+        }
+      },
+      { immediate: true, deep: false }
+    );
   }
 
   private navToHome() {

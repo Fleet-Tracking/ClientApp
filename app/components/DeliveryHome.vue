@@ -18,22 +18,22 @@
 </template>
 
 <script lang="ts">
-import { Application } from "@nativescript/core";
 import { android } from "@nativescript/core/application";
 import { AndroidActivityBackPressedEventData } from "@nativescript/core/application/application-interfaces";
 import Vue from "nativescript-vue";
 import { Component } from "vue-property-decorator";
-import { getDeliveries, setInitialUserData } from "~/utils/firebase";
+import { vxm } from "~/store";
 import MapView from "./MapView.vue";
 
 @Component
 export default class DeliveryHome extends Vue {
-  private deliveries: DeliveryItem[] = [];
+  private get deliveries() {
+    return vxm.firebase.deliveries;
+  }
 
   async mounted() {
-    console.log("here");
-    await setInitialUserData();
-    await this.getOwnDeliveries();
+    await vxm.firebase.setInitialUserData();
+    await vxm.firebase.watchDeliveries();
   }
 
   private loaded() {
@@ -50,10 +50,6 @@ export default class DeliveryHome extends Vue {
         delivery: item,
       },
     });
-  }
-
-  private async getOwnDeliveries() {
-    this.deliveries.push(...(await getDeliveries()));
   }
 
   private customBack(data: AndroidActivityBackPressedEventData) {

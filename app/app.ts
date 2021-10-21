@@ -1,13 +1,13 @@
 import Vue from 'nativescript-vue'
+import VueDevtools from 'nativescript-vue-devtools'
 import Main from './components/Main.vue'
-import { initialize } from './utils/firebase';
 
 declare let __DEV__: boolean;
 
+Vue.use(VueDevtools, { host: '192.168.0.10', port: '8098' })
+
 // Prints Vue logs when --env.production is *NOT* set while building
 Vue.config.silent = !__DEV__
-
-initialize().then((url) => console.info(url)).catch(err => console.error(err));
 
 new Vue({
   render: (h) => h('frame', [h(Main)]),

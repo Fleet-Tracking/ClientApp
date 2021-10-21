@@ -14,6 +14,7 @@
 import Vue from "nativescript-vue";
 import { Component, Prop } from "vue-property-decorator";
 import * as geolocation from "@nativescript/geolocation";
+import { vxm } from "~/store";
 
 @Component
 export default class MapView extends Vue {
@@ -21,7 +22,6 @@ export default class MapView extends Vue {
   private delivery!: DeliveryItem;
 
   async mounted() {
-    console.log(this.delivery);
     this.updateCoordinates();
   }
 
@@ -36,7 +36,10 @@ export default class MapView extends Vue {
     if (await geolocation.isEnabled()) {
       geolocation.watchLocation(
         (location) => {
-          console.log(location);
+          vxm.firebase.updateCoordinates({
+            lat: location.latitude,
+            lng: location.longitude,
+          });
         },
         (err) => {
           console.error(err);
@@ -44,10 +47,6 @@ export default class MapView extends Vue {
         { desiredAccuracy: 1 /* High Accuracy */ }
       );
     }
-
-    // setTimeout(() => {
-
-    // }, 15000)
   }
 }
 </script>

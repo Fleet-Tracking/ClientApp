@@ -41,9 +41,6 @@ export class FirebaseStore extends VuexModule.With({ namespaced: 'demo' }) {
   @action
   async watchDeliveries() {
     if (this.user) {
-      if (this._deliveryEventListener) {
-        firebase.removeEventListeners([this._deliveryEventListener], `/delivery/${this.user.uid}`)
-      }
       this._deliveryEventListener = (data) => {
         if (data.type === 'ChildAdded') {
           this.addDelivery({ ...data.value as { lat: number, lng: number }, id: data.key } as DeliveryItem)

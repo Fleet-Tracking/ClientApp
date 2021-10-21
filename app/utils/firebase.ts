@@ -36,3 +36,16 @@ export async function setInitialUserData() {
     })
   }
 }
+
+export async function getDeliveries(): Promise<DeliveryItem[]> {
+  const user = await firebase.getCurrentUser()
+  const final: DeliveryItem[] = []
+  if (user) {
+    const data = await (firebase.getValue(`/delivery/${user.uid}`))
+    for (const [key, val] of Object.entries(data.value)) {
+      final.push({ ...val as { lat: number, lng: number }, id: key } as DeliveryItem)
+    }
+  }
+
+  return final
+}

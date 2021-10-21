@@ -1,32 +1,64 @@
 <template>
-  <Page>
+  <Page @loaded="loaded" @navigatingFrom="leaving">
     <ActionBar>
       <Label text="Home" />
     </ActionBar>
 
-    <GridLayout>
-      <Label class="info">
-        <FormattedString>
-          <Label class="fas" text.decode="&#xf135; " />
-          <Label :text="message" />
-        </FormattedString>
-      </Label>
-    </GridLayout>
+    <ScrollView orientation="vertical">
+      <StackLayout>
+        <Button
+          v-for="del in deliveries"
+          :text="del.lat + ' - ' + del.lng"
+          :key="del.id"
+          @tap="openDeliveryView(del)"
+        />
+      </StackLayout>
+    </ScrollView>
   </Page>
 </template>
 
 <script lang="ts">
+import { Application } from "@nativescript/core";
+import { android } from "@nativescript/core/application";
+import { AndroidActivityBackPressedEventData } from "@nativescript/core/application/application-interfaces";
 import Vue from "nativescript-vue";
 import { Component } from "vue-property-decorator";
-import { vxm } from "~/store";
-import { setInitialUserData } from "~/utils/firebase";
+import { getDeliveries, setInitialUserData } from "~/utils/firebase";
+import MapView from "./MapView.vue";
 
 @Component
 export default class DeliveryHome extends Vue {
-  private message: string = "Home";
+  private deliveries: DeliveryItem[] = [];
 
   async mounted() {
+    console.log("here");
     await setInitialUserData();
+    await this.getOwnDeliveries();
+  }
+
+  private loaded() {
+    android.on("activityBackPressed", this.customBack);
+  }
+
+  private leaving() {
+    android.off("activityBackPressed", this.customBack);
+  }
+
+  private openDeliveryView(item: DeliveryItem) {
+    this.$navigateTo(MapView, {
+      props: {
+        delivery: item,
+      },
+    });
+  }
+
+  private async getOwnDeliveries() {
+    this.deliveries.push(...(await getDeliveries()));
+  }
+
+  private customBack(data: AndroidActivityBackPressedEventData) {
+    data.cancel = true;
+    console.log("back pressed");
   }
 }
 </script>

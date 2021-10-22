@@ -1,5 +1,5 @@
 <template>
-  <Page>
+  <Page @loaded="login">
     <ActionBar>
       <Label text="Home" />
     </ActionBar>
@@ -24,28 +24,28 @@ export default class Main extends Vue {
 
   async login() {
     const user = await vxm.firebase.initialize();
-    if (!user) {
-      vxm.firebase.login();
-    } else {
+    if (user) {
       vxm.firebase.setUser({ uid: user.uid, phone: user.phoneNumber! });
       console.log(vxm.firebase.user);
-      this.navToHome();
+      // this.navToHome();
     }
 
     vxm.firebase.$watch(
       "user",
       (user) => {
         if (user) {
-          this.navToHome();
+          // this.navToHome();
         }
       },
       { immediate: true, deep: false }
     );
   }
 
+  // TODO: If user is logged in, then check where they belong from user metadata
   private setUserType(type: "DELIVERY" | "USER") {
     this.userType = type;
-    this.login();
+    this.navToHome();
+    // vxm.firebase.login();
   }
 
   private navToHome() {

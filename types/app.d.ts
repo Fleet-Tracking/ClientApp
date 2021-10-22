@@ -4,6 +4,12 @@ interface DeliveryItem {
   lng: number
 }
 
+interface OrderItem {
+  id: string
+  delivery: string
+  order: string
+}
+
 interface UserData {
   phone: string
   uid: string

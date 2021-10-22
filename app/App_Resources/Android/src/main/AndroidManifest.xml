@@ -30,7 +30,7 @@
 			android:configChanges="keyboard|keyboardHidden|orientation|screenSize|smallestScreenSize|screenLayout|locale|uiMode"
 			android:theme="@style/LaunchScreenTheme"
 			android:hardwareAccelerated="true"
-      		android:launchMode="singleTask">
+      android:launchMode="singleTask">
 
 			<meta-data android:name="SET_THEME_ON_LAUNCH" android:resource="@style/AppTheme" />
 
@@ -40,5 +40,9 @@
 			</intent-filter>
 		</activity>
 		<activity android:name="com.tns.ErrorReportActivity"/>
+
+    <meta-data
+        android:name="com.google.android.geo.API_KEY"
+        android:value="@string/nativescript_google_maps_api_key" />
 	</application>
 </manifest>

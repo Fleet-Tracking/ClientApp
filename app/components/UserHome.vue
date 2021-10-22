@@ -4,31 +4,60 @@
       <Label text="Home" />
     </ActionBar>
 
-    <ScrollView orientation="vertical">
-      <StackLayout>
-        <Button />
-      </StackLayout>
-    </ScrollView>
+    <StackLayout>
+      <Button
+        v-for="o in orders"
+        :text="o.order"
+        :key="o.id"
+        @tap="openOrderView(o)"
+      />
+    </StackLayout>
   </Page>
 </template>
 
 <script lang="ts">
-import { android } from "@nativescript/core/application";
-import { AndroidActivityBackPressedEventData } from "@nativescript/core/application/application-interfaces";
 import Vue from "nativescript-vue";
 import { Component } from "vue-property-decorator";
 import { vxm } from "~/store";
-import MapView from "./MapView.vue";
+import BottomSheet from "./BottomSheet.vue";
+import { android } from "@nativescript/core/application";
+import { AndroidActivityBackPressedEventData } from "@nativescript/core/application/application-interfaces";
+import UserMapView from "./UserMapView.vue";
 
-@Component
+@Component({
+  components: {
+    BottomSheet,
+  },
+})
 export default class UserHome extends Vue {
+  private get orders() {
+    return vxm.firebase.orders;
+  }
+
   async mounted() {
     await vxm.firebase.setInitialUserData("USER");
+    await vxm.firebase.watchOrders();
+  }
+
+  private loaded() {
+    android.on("activityBackPressed", this.customBack);
+  }
+
+  private leaving() {
+    android.off("activityBackPressed", this.customBack);
   }
 
   private customBack(data: AndroidActivityBackPressedEventData) {
     data.cancel = true;
     console.log("back pressed");
+  }
+
+  private openOrderView(item: OrderItem) {
+    this.$navigateTo(UserMapView, {
+      props: {
+        order: item,
+      },
+    });
   }
 }
 </script>
@@ -45,5 +74,10 @@ export default class UserHome extends Vue {
   font-size: 20;
   horizontal-align: center;
   vertical-align: center;
+}
+
+.main {
+  width: 100%;
+  height: 100%;
 }
 </style>

@@ -7,17 +7,29 @@ export class FirebaseStore extends VuexModule.With({ namespaced: 'demo' }) {
   public user: UserData = { phone: '', uid: '' }
   public _initialized = false
   private _deliveryEventListener: ((data: firebase.FBData) => void) | undefined
+  private _ordersEventListener: ((data: firebase.FBData) => void) | undefined
 
   private _deliveries: DeliveryItem[] = []
+  private _orders: OrderItem[] = []
 
   get deliveries() {
     return this._deliveries
+  }
+
+  get orders() {
+    return this._orders
   }
 
   @mutation
   addDelivery(item: DeliveryItem) {
     if (!this._deliveries.find(val => val.id === item.id))
       this._deliveries.push(item)
+  }
+
+  @mutation
+  addOrder(item: OrderItem) {
+    if (!this._orders.find(val => val.id === item.id))
+      this._orders.push(item)
   }
 
   @mutation
@@ -43,12 +55,29 @@ export class FirebaseStore extends VuexModule.With({ namespaced: 'demo' }) {
     if (this.user) {
       this._deliveryEventListener = (data) => {
         if (data.type === 'ChildAdded') {
-          this.addDelivery({ ...data.value as { lat: number, lng: number }, id: data.key } as DeliveryItem)
+          for (const [key, val] of Object.entries(data.value)) {
+            this.addDelivery({ ...val as { lat: number, lng: number }, id: key })
+          }
         }
       }
       await (firebase.addChildEventListener(this._deliveryEventListener, `/delivery/${this.user.uid}`))
     }
   }
+
+  @action
+  async watchOrders() {
+    if (this.user) {
+      this._ordersEventListener = (data) => {
+        if (data.type === 'ChildAdded') {
+          for (const [key, val] of Object.entries(data.value)) {
+            this.addOrder({ ...val as { delivery: string, order: string }, id: key })
+          }
+        }
+      }
+      await (firebase.addChildEventListener(this._ordersEventListener, `/receiver/${this.user.uid}`))
+    }
+  }
+
 
   @action
   async updateCoordinates({ lat, lng }: { lat: number, lng: number }) {

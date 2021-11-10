@@ -24,10 +24,15 @@ export default class Main extends Vue {
 
   async login() {
     const user = await vxm.firebase.initialize();
+    console.log(user);
     if (user) {
       vxm.firebase.setUser({ uid: user.uid, phone: user.phoneNumber! });
       console.log(vxm.firebase.user);
       // this.navToHome();
+    } else {
+      const user = await vxm.firebase.login();
+      vxm.firebase.setUser({ uid: user.uid, phone: user.phoneNumber! });
+      console.log(vxm.firebase.user);
     }
 
     vxm.firebase.$watch(
@@ -45,7 +50,6 @@ export default class Main extends Vue {
   private setUserType(type: "DELIVERY" | "USER") {
     this.userType = type;
     this.navToHome();
-    // vxm.firebase.login();
   }
 
   private navToHome() {

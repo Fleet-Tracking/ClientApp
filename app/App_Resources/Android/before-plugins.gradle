@@ -1,5 +1,11 @@
+repositories {
+    google()
+    jcenter()
+    mavenCentral()
+}
+
 android {
   project.ext {
-    googlePlayServicesVersion = "16.+"
+    googlePlayServicesVersion = "17.+"
   }
 }

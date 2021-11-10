@@ -7,7 +7,7 @@
     <StackLayout>
       <Button
         v-for="o in orders"
-        :text="o.order"
+        :text="o.id"
         :key="o.id"
         @tap="openOrderView(o)"
       />
@@ -52,7 +52,7 @@ export default class UserHome extends Vue {
     console.log("back pressed");
   }
 
-  private openOrderView(item: OrderItem) {
+  private openOrderView(item: RawOrderItem) {
     this.$navigateTo(UserMapView, {
       props: {
         order: item,

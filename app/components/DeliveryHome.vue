@@ -37,11 +37,11 @@ export default class DeliveryHome extends Vue {
   }
 
   private loaded() {
-    android.on("activityBackPressed", this.customBack);
+    // android.on("activityBackPressed", this.customBack);
   }
 
   private leaving() {
-    android.off("activityBackPressed", this.customBack);
+    // android.off("activityBackPressed", this.customBack);
   }
 
   private openDeliveryView(item: DeliveryItem) {

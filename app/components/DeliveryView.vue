@@ -5,8 +5,8 @@
     </ActionBar>
 
     <GridLayout class="info">
-      <Label text="Sending coordinates..." />
-      <Button text="Complete order" @tap="completeDelivery" />
+      <Label row="0" col="0" text="Sending coordinates..." />
+      <Button row="1" col="0" text="Complete order" @tap="completeDelivery" />
     </GridLayout>
   </Page>
 </template>

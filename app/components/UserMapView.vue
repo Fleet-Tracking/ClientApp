@@ -218,7 +218,20 @@ export default class UserMapView extends Vue {
 
         (polyline as any).loadPoints();
         this.map.addPolyline(polyline.android);
+
+        this.zoomMap();
       }
+    }
+  }
+
+  private zoomMap() {
+    if (this.deliveryMarker && this.map) {
+      this.map.animateCamera(
+        com.google.android.gms.maps.CameraUpdateFactory.newLatLngZoom(
+          this.deliveryMarker.getPosition(),
+          14
+        )
+      );
     }
   }
 }

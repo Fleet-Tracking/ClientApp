@@ -38,9 +38,11 @@ interface UserData {
 interface NativeMap {
   addMarker(marker: any /* import('../node_modules/nativescript-google-maps-sdk/map-view').Marker */)
   addPolyline(shapes: any)
+  animateCamera(cameraUpdate: any)
 }
 declare class MarkerAndroid {
   setPosition(position: any)
+  getPosition(): any
   remove()
 }
 
@@ -50,6 +52,10 @@ declare module com {
       declare module gms {
         declare module maps {
           const OnMapReadyCallback: any
+
+          declare class CameraUpdateFactory {
+            public static newLatLngZoom(position: any, zoom: number): any
+          }
 
           declare module model {
             declare class BitmapDescriptorFactory {

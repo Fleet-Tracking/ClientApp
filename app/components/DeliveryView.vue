@@ -6,6 +6,7 @@
 
     <GridLayout class="info">
       <Label text="Sending coordinates..." />
+      <Button text="Complete order" @tap="completeDelivery" />
     </GridLayout>
   </Page>
 </template>
@@ -25,8 +26,18 @@ export default class MapView extends Vue {
     this.updateCoordinates();
   }
 
+  private async setDeliveryStatus(status: DeliveryStatus) {
+    this.delivery.status = status;
+    vxm.firebase.setDeliveryStatus({ deliveryID: this.delivery.id, status });
+  }
+
+  destroyed() {
+    if (this.delivery.status !== "COMPLETED") this.setDeliveryStatus("HALT");
+  }
+
   // TODO: Unset this on component destroy
   private async updateCoordinates() {
+    this.setDeliveryStatus("ONGOING");
     try {
       await geolocation.enableLocationRequest();
     } catch (e) {
@@ -47,6 +58,11 @@ export default class MapView extends Vue {
         { desiredAccuracy: 1 /* High Accuracy */ }
       );
     }
+  }
+
+  private completeDelivery() {
+    this.setDeliveryStatus("COMPLETED");
+    this.$navigateBack();
   }
 }
 </script>

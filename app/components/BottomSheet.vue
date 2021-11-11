@@ -5,17 +5,22 @@
     backgroundColor="blue"
     @pan="onDragSheet"
   >
-    <Label backgroundColor="yellow" text="test" @loaded="loaded" />
+    <AbsoluteLayout backgroundColor="yellow" height="100%">
+      <Label top="300" left="175" :text="deliveryStatus" @loaded="loaded" />
+    </AbsoluteLayout>
   </GridLayout>
 </template>
 
 <script lang="ts">
 import { PanGestureEventData } from "@nativescript/core";
 import Vue from "nativescript-vue";
-import { Component } from "vue-property-decorator";
+import { Component, Prop } from "vue-property-decorator";
 
 @Component
 export default class BottomSheet extends Vue {
+  @Prop({ default: () => {} })
+  private deliveryStatus!: DeliveryStatus;
+
   private onDragSheet(event: PanGestureEventData) {
     this.$emit("pan", event);
   }

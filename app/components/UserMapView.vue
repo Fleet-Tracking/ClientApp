@@ -12,11 +12,13 @@
         height="100%"
         width="100%"
       />
-      <!-- <BottomSheet
+      <BottomSheet
         ref="bottomSheet"
         verticalAlignment="top"
+        :deliveryStatus="deliveryStatus"
+        :key="parsedOrder"
         @pan="onDragSheet"
-      /> -->
+      />
     </AbsoluteLayout>
   </Page>
 </template>
@@ -31,7 +33,6 @@ import {
 } from "@nativescript/core";
 import { AndroidActivityBackPressedEventData } from "@nativescript/core/application/application-interfaces";
 import { screen } from "@nativescript/core/platform";
-import { Order } from "@nativescript/core/ui/layouts/flexbox-layout";
 import {
   MapView,
   Marker,
@@ -66,12 +67,13 @@ export default class UserMapView extends Vue {
   private deliveryMarker?: MarkerAndroid;
   private userMarker?: MarkerAndroid;
 
+  private deliveryStatus: DeliveryStatus = "HALT";
+
   created() {
     this.fetchOrder();
   }
 
   destroyed() {
-    console.log("here");
     vxm.firebase.removeOngoingListener();
   }
 
@@ -131,6 +133,7 @@ export default class UserMapView extends Vue {
     });
 
     if (order) {
+      this.deliveryStatus = order.status;
       this.parsedOrder = { order };
 
       await vxm.firebase.watchOngoingDelivery({

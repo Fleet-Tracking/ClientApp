@@ -18,16 +18,16 @@
 </template>
 
 <script lang="ts">
-import { android } from "@nativescript/core/application";
 import { AndroidActivityBackPressedEventData } from "@nativescript/core/application/application-interfaces";
 import Vue from "nativescript-vue";
 import { Component } from "vue-property-decorator";
 import { vxm } from "~/store";
-import MapView from "./MapView.vue";
+import MapView from "./DeliveryView.vue";
 
 @Component
 export default class DeliveryHome extends Vue {
   private get deliveries() {
+    console.log(vxm.firebase.deliveries);
     return vxm.firebase.deliveries;
   }
 

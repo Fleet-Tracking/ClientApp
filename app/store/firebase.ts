@@ -24,8 +24,9 @@ export class FirebaseStore extends VuexModule.With({ namespaced: 'demo' }) {
 
   @mutation
   addDelivery(item: DeliveryItem) {
-    if (!this._deliveries.find(val => val.id === item.id))
+    if (!this._deliveries.find(val => val.id === item.id)) {
       this._deliveries.push(item)
+    }
   }
 
   @mutation
@@ -64,7 +65,6 @@ export class FirebaseStore extends VuexModule.With({ namespaced: 'demo' }) {
   async watchOngoingDelivery(args: { deliveryID: string, callback: (data: FirebaseDeliveryItem) => void }) {
     if (this._initialized) {
       const listener = (data: firebase.FBData) => {
-        console.log(data)
         if (data.type === 'ValueChanged' && data.key === 'ongoing') {
           args.callback(data.value as FirebaseDeliveryItem)
         }
@@ -80,21 +80,27 @@ export class FirebaseStore extends VuexModule.With({ namespaced: 'demo' }) {
   }
 
   @action
+  async setDeliveryStatus(args: { deliveryID: string, status: DeliveryStatus }) {
+    firebase.setValue(`/delivery/${this.user.uid}/${args.deliveryID}/status`, args.status)
+  }
+
+  @action
   async watchDeliveries() {
     if (this.user) {
       const listener = (data: firebase.FBData) => {
-        if (data.type === 'ChildAdded' && data.key !== 'ongoing') {
 
+        if (data.type === 'ChildAdded' && data.key !== 'ongoing') {
           if (data.value.lat && data.value.lng) {
-            this.addDelivery({ lat: data.value.lat, lng: data.value.lng, id: data.key })
+            this.addDelivery({ lat: data.value.lat, lng: data.value.lng, status: data.value.status ?? 'HALT', id: data.key })
           } else {
             for (const [key, val] of Object.entries(data.value)) {
               if (key !== 'ongoing')
-                this.addDelivery({ ...val as { lat: number, lng: number }, id: key })
+                this.addDelivery({ ...val as DeliveryItem, id: key })
             }
           }
         }
       }
+
       this._deliveryEventListener = await (firebase.addChildEventListener(listener, `/delivery/${this.user.uid}`))
     }
   }
@@ -102,10 +108,9 @@ export class FirebaseStore extends VuexModule.With({ namespaced: 'demo' }) {
   @action
   async watchOrders() {
     if (this.user) {
+
       const listener = (data: firebase.FBData) => {
         if (data.type === 'ChildAdded') {
-          console.log(data.value)
-
           if (data.value.delivery && data.value.order) {
             this.addOrder({ delivery: data.value.delivery, order: data.value.order, id: data.key })
           } else {

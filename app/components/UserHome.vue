@@ -31,6 +31,7 @@ import UserMapView from "./UserMapView.vue";
 })
 export default class UserHome extends Vue {
   private get orders() {
+    console.log(vxm.firebase.orders);
     return vxm.firebase.orders;
   }
 

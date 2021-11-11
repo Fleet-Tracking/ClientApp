@@ -1,5 +1,8 @@
+
+type DeliveryStatus = 'HALT' | 'ONGOING' | 'COMPLETED'
 interface DeliveryItem {
   id: string
+  status: DeliveryStatus
   lat: number
   lng: number
 }
@@ -14,6 +17,7 @@ interface FirebaseOrderItem {
   lat: number,
   lng: number,
   user: string
+  status: DeliveryStatus
 }
 
 type FirebaseDeliveryItem = {
